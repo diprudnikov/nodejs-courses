@@ -1,10 +1,7 @@
-'use strict';
-
-import config from './config/config.json';
+import config from './config/config';
+import { User, Product } from './models';
 
 console.log(config.name);
-
-import {User, Product} from './models';
 
 const user = new User();
 const product = new Product();
