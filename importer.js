@@ -1,5 +1,4 @@
 import eventEmitter from './eventEmitter';
-import { promisify } from 'util';
 import { convertAsync, convertSync } from "./csvToJsonConverter";
 
 export default class Importer {
