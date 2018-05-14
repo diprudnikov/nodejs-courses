@@ -10,4 +10,5 @@ const product = new Product();
 
 const dirWatcher = new DirWatcher();
 const importer = new Importer();
+dirWatcher.on('changed', importer.import);
 dirWatcher.watch('data/', 2000);

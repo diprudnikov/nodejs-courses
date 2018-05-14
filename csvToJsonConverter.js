@@ -3,21 +3,22 @@ import fs from 'fs';
 function convertAsync(path) {
     return new Promise((resolve, reject) => {
         let jsonObject = [];
-        let data = fs.readFileSync(path, 'utf8');
-        if(typeof data !== 'string'){
-            reject('Invalid CSV file');
-        }
-        data = data.split(/\n/);
-        const properties = data.shift().split(',');
-        data.forEach((datum) => {
-            datum = datum.split(',');
-            const item = {};
-            properties.forEach((property, index) => {
-                item[property] = datum[index];
+        fs.readFile(path, { encoding: 'utf8' }, (err, data) => {
+            if(typeof data !== 'string'){
+                reject('Invalid CSV file');
+            }
+            data = data.split(/\n/);
+            const properties = data.shift().split(',');
+            data.forEach((datum) => {
+                datum = datum.split(',');
+                const item = {};
+                properties.forEach((property, index) => {
+                    item[property] = datum[index];
+                });
+                jsonObject.push(item);
             });
-            jsonObject.push(item);
+            resolve(jsonObject);
         });
-        resolve(jsonObject);
     });
 }
 

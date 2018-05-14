@@ -1,10 +1,7 @@
-import eventEmitter from './eventEmitter';
-import { convertAsync, convertSync } from "./csvToJsonConverter";
+import { convertAsync, convertSync } from "../csvToJsonConverter";
 
 export default class Importer {
-    constructor() {
-        eventEmitter.on('changed', this.import)
-    }
+    constructor() {}
 
     import(path) {
         return convertAsync(path)
