@@ -1,7 +1,7 @@
 import config from './config/config';
-import { User, Product } from './models';
-import DirWatcher from './dirwatcher';
-import Importer from './importer';
+import { User, Product } from './modules/models';
+import DirWatcher from './modules/dirwatcher';
+import Importer from './modules/importer';
 
 console.log(config.name);
 

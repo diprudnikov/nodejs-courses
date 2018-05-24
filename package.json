@@ -13,7 +13,10 @@
   },
   "author": "Dzmitry Prudnikau <dzmitry_prudnikau@epam.com>",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "minimist": "^1.2.0",
+    "through2": "^2.0.3"
+  },
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.3",
