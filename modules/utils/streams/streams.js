@@ -74,7 +74,16 @@ function showHelpMessage() {
 }
 
 function reverse() {
-    process.stdin.pipe(process.stdout);
+    const reverseStream = through(
+        function (buffer, encoding, next) {
+            this.push(buffer.toString().split('').reverse().join('').replace(/\n/g, "") + '\n');
+            next();
+        },
+        function (done) {
+            done()
+        },
+    );
+    process.stdin.pipe(reverseStream).pipe(process.stdout);
 }
 
 function transform() {
@@ -92,32 +101,68 @@ function transform() {
 
 function outputFile(fileName) {
     const readStream = fs.createReadStream(path.normalize(dataPath + fileName));
+    readStream.on('error', (err) => {
+        console.error(err);
+    });
     readStream.pipe(process.stdout);
 }
 
 function convertFromFile(fileName) {
-    const paths = path.normalize(dataPath + fileName);
-    const data = converter.convertSync(paths);
-    process.stdout.write(JSON.stringify(data) + '\n');
+    const transformStream = through(
+        function (buffer, encoding, next) {
+            const data = buffer.toString();
+            const convertedData = converter.convertData(data);
+            this.push(JSON.stringify(convertedData));
+            next();
+        },
+        function (done) {
+            done()
+        },
+    );
+    const readStream = fs.createReadStream(path.normalize(dataPath + fileName));
+    readStream.on('error', (err) => {
+        console.error(err);
+    });
+    readStream.pipe(transformStream).pipe(process.stdout);
 }
 
 function convertToFile(fileName) {
     const paths = path.normalize(dataPath + fileName);
-    const data = converter.convertSync(paths);
-    const writeFile = fs.createWriteStream(`${paths.slice(0, paths.indexOf('.'))}.json`);
-    writeFile.write(JSON.stringify(data));
+    const transformStream = through(
+        function (buffer, encoding, next) {
+            const data = buffer.toString();
+            const convertedData = converter.convertData(data);
+            this.push(JSON.stringify(convertedData));
+            next();
+        },
+        function (done) {
+            done()
+        },
+    );
+    const readStream = fs.createReadStream(paths);
+    readStream.on('error', (err) => {
+        console.error(err);
+    });
+    const writeStream = fs.createWriteStream(`${paths.slice(0, paths.indexOf('.'))}.json`);
+    writeStream.on('error', (err) => {
+        console.error(err);
+    });
+    readStream.pipe(transformStream).pipe(writeStream);
 }
 
 function cssBundler(filesPath) {
     const pathToCss = path.normalize(rootPath + '/' + filesPath);
-    const files = fs.readdirSync(pathToCss);
-    const chunks = [];
-    files.forEach((file) => {
-        const data = fs.readFileSync(path.normalize(pathToCss + '/' + file));
-        chunks.push(data);
+    fs.readdir(pathToCss, (err, files) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        const writeStream = fs.createWriteStream(path.normalize(pathToCss + '/bundle.css'));
+        files.forEach((file) => {
+            const readStream = fs.createReadStream(path.normalize(pathToCss + '/' + file));
+            readStream.pipe(writeStream);
+        });
+        const additionalFile = fs.createReadStream(path.normalize(rootPath + '/assets/nodejs-homework3.css'));
+        additionalFile.pipe(writeStream);
     });
-    const additionalFile = fs.readFileSync(path.normalize(rootPath + '/assets/nodejs-homework3.css'));
-    chunks.push(additionalFile);
-    const cssData = Buffer.concat(chunks);
-    fs.writeFile(path.normalize(pathToCss + '/bundle.css'), cssData.toString());
 }
