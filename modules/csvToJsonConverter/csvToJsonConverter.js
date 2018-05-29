@@ -43,4 +43,20 @@ export default class Converter {
         });
         return jsonObject;
     }
+
+    convertData(data) {
+        const jsonObject = [];
+        let receivedData = data;
+        receivedData = receivedData.split(/\n/);
+        const properties = receivedData.shift().split(',');
+        receivedData.forEach((datum) => {
+            datum = datum.split(',');
+            const item = {};
+            properties.forEach((property, index) => {
+                item[property] = datum[index];
+            });
+            jsonObject.push(item);
+        });
+        return jsonObject;
+    }
 }
