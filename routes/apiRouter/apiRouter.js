@@ -1,37 +1,17 @@
 import express from 'express';
-import products from '../../models/products';
-import users from '../../models/users';
+import productsController from '../../controllers/products';
+import usersController from '../../controllers/users';
 
 const apiRouter = express.Router();
 
-apiRouter.get('/api/products', (req, res) => {
-    res.json(products);
-});
+apiRouter.get('/api/products', productsController.getAllProductsHandler);
 
-apiRouter.get('/api/products/:id', (req, res) => {
-    const product = products.find(product => product.id === +req.params.id);
-    res.json(product);
-});
+apiRouter.get('/api/products/:id', productsController.getProductByIdHandler);
 
-apiRouter.get('/api/products/:id/reviews', (req, res) => {
-    const product = products.find(product => product.id === +req.params.id);
-    res.json(product.reviews);
-});
+apiRouter.get('/api/products/:id/reviews', productsController.getProductReviewsByIdHandler);
 
-apiRouter.post('/api/products', (req, res) => {
-    const product = {
-        id: products.length + 1,
-        reviews: [
-            products[products.length - 2].reviews[0],
-            products[products.length - 3].reviews[1],
-        ]
-    };
-    products.push(product);
-    res.json(product);
-});
+apiRouter.post('/api/products', productsController.postNewProductHandler);
 
-apiRouter.get('/api/users', (req, res) => {
-    res.json(users);
-});
+apiRouter.get('/api/users', usersController.getAllUsersHandler);
 
 export default apiRouter;

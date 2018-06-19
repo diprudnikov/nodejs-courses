@@ -1,6 +1,8 @@
-const http = require('http');
+import http from 'http';
 
 const server = http.createServer();
+
+const port = process.env.PORT || 8000;
 
 const product = {
     id: 1,
@@ -21,4 +23,4 @@ server.on('request', (req, res) => {
     res.end(body);
 });
 
-server.listen(8000);
+server.listen(port);

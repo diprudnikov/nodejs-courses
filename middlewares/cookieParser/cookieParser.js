@@ -1,4 +1,6 @@
+import cookie from 'cookie';
+
 export default function cookieParser(req, res, next) {
-    req.parsedCookies = req.headers.cookie;
+    req.parsedCookies = cookie.parse(req.headers.cookie);
     next();
 }

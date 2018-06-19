@@ -14,7 +14,9 @@
   "author": "Dzmitry Prudnikau <dzmitry_prudnikau@epam.com>",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.3"
+    "cookie": "^0.3.1",
+    "express": "^4.16.3",
+    "through2": "^2.0.3"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
