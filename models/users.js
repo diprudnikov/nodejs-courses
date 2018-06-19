@@ -1,12 +1,21 @@
 const users = [
     {
-        name: 'Dmitriy',
+        userName: 'Dmitriy',
+        email: 'dmitriy@gmail.com',
+        login: 'dmitriy',
+        password: 'dmitriy123'
     },
     {
-        name: 'Denis',
+        usertName: 'Denis',
+        email: 'denis@gmail.com',
+        login: 'denis',
+        password: 'denis123'
     },
     {
-        name: 'Egor',
+        userName: 'Egor',
+        email: 'egor@gmail.com',
+        login: 'egor',
+        password: 'egor123'
     }
 ];
 
