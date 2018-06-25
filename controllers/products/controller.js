@@ -1,28 +1,54 @@
-import products from '../../models/products';
+import Product from '../../models/product';
 
 const getAllProductsHandler = (req, res) => {
-    res.json(products);
+    return Product.findAll().then(products => {
+        const data = products.map(product => {
+            return {
+                id: product.dataValues.id,
+                name: product.dataValues.name,
+                reviews: product.dataValues.reviews,
+            }
+        });
+        res.json(data);
+    });
 };
 
 const getProductByIdHandler = (req, res) => {
-    const product = products.find(product => product.id === +req.params.id);
-    res.json(product);
+    return Product.findAll({
+        where: {
+            id: +req.params.id
+        }
+    }).then(product => {
+        const data = {
+            id: product.dataValues.id,
+            name: product.dataValues.name,
+            reviews: product.dataValues.reviews,
+        };
+        res.json(data);
+    });
 };
 
 const getProductReviewsByIdHandler = (req, res) => {
-    const product = products.find(product => product.id === +req.params.id);
-    res.json(product.reviews);
+    return Product.findAll({
+        where: {
+            id: +req.params.id
+        }
+    }).then(product => {
+        const data = {
+            reviews: product.dataValues.reviews,
+        };
+        res.json(data);
+    });
 };
 
 const postNewProductHandler = (req, res) => {
     const product = {
-        id: products.length + 1,
-        reviews: [
-            products[products.length - 2].reviews[0],
-            products[products.length - 3].reviews[1],
-        ]
+        name: 'dress',
+        reviews: 'cool'
     };
-    products.push(product);
+    Product.sync().then(() => {
+        return Product.create(product);
+    });
     res.json(product);
 };
 
