@@ -1,14 +1,13 @@
-import config from './config/config';
-import { User, Product } from './models';
-import DirWatcher from './dirwatcher';
-import Importer from './importer';
+import queryParser from './middlewares/queryParser';
+import cookieParser from './middlewares/cookieParser';
+import express from 'express';
+import apiRouter from './routes/apiRouter';
 
-console.log(config.name);
+const app = express();
 
-const user = new User();
-const product = new Product();
+app.use(queryParser);
+app.use(cookieParser);
 
-const dirWatcher = new DirWatcher();
-const importer = new Importer();
-dirWatcher.on('changed', importer.import);
-dirWatcher.watch('data/', 2000);
+app.use(apiRouter);
+
+export default app;
